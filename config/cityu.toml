@@ -1,0 +1,40 @@
+## CityU curriculum orchestrator configuration (TOML)
+## Save as cityu.toml and run commands with --config path or let the tool auto-discover config/cityu.toml
+## 城市大学（CityU）课程抓取与可视化工具配置（TOML）
+## 保存为 cityu.toml，运行时使用 --config 指定或放在 config/cityu.toml 以便自动发现
+
+[common]
+out_dir = "outputs"          # default output directory for files the tool writes / 默认输出目录
+cache_dir = "cache"           # HTML cache directory for downloaded pages / HTML 缓存目录
+verbose = true                # show progress / 显示进度
+
+[scrape_major]                # corresponds to subcommand: scrape-major / 对应子命令 scrape-major
+url = ""                      # single major URL (mutually exclusive with 'file') / 单个专业页 URL（与 file 互斥）
+file = ""                     # path to a text file of URLs (one per line) / URL 列表文件路径（每行一个）
+out = "majors.json"           # filename placed under outputs/ (unless out_dir overridden) / 输出文件名（默认写入 outputs/）
+format = "json"               # json | csv / 输出格式
+courses = true                # also fetch all course pages linked from major page / 同时抓取课程子页
+delay = 0.2                   # polite delay between requests (seconds) / 请求间隔（秒）
+retries = 3                   # retry count for network errors / 网络错误重试次数
+timeout = 15.0                # request timeout (seconds) / 请求超时（秒）
+concurrency = 4               # workers for fetching course pages / 抓取课程页的并发数
+
+[build_db]                    # corresponds to subcommand: build-db / 对应子命令 build-db
+major_url = ""                # required: major curriculum URL / 必填：专业课程结构页 URL
+db = "courses.db"             # SQLite filename (will be placed in outputs/ by default) / SQLite 文件名（默认写入 outputs/）
+delay = 0.2                   # request delay / 请求间隔
+retries = 3                   # retry count / 重试次数
+timeout = 15.0                # timeout / 超时
+concurrency = 8               # workers / 并发数
+reset = false                 # drop and recreate tables / 先删除再重建表
+
+[visualize]                   # corresponds to subcommand: visualize / 对应子命令 visualize
+db = "outputs/courses.db"     # path to SQLite DB / SQLite 数据库路径
+out = "outputs/trees/dependency.png"  # PNG output path / 输出 PNG 路径
+focus = ""                    # optional: focus course code to render its prerequisite subtree / 可选：聚焦某课程的先修子树
+highlight_cycles = false      # highlight cycles in red / 红色高亮环路
+no_layered = false            # set true to disable layered layout / 设为 true 关闭分层布局
+max_depth = 6                 # limit levels from roots (or from focus ancestors) / 限制层级深度
+truncate_title = 28           # truncate course title length on nodes / 节点课程标题最大长度
+no_unit_colors = false        # set true to disable coloring nodes by offering unit / 设为 true 取消按开课单位着色
+max_per_layer = 5             # wrap wide layers into rows of at most N nodes / 每层最多 N 个节点，超出自动换行

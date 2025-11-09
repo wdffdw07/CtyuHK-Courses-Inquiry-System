@@ -1,0 +1,31 @@
+## Visualize (Dependency Graph) Configuration / 依赖关系图 可视化配置
+
+[common]
+out_dir = "outputs"      # 输出目录
+verbose = true            # 显示进度
+
+[visualize]
+# Data source
+db = "outputs/courses.db"  # SQLite 数据库路径
+
+# Optional: Allowed course list for this major (text/CSV; codes like CS1102)
+# When provided, the tool will remove any non-listed courses and related edges before rendering.
+allowed_courses_file = ""  # e.g., "config/allowed_codes.txt"
+# Filter behavior: true to modify DB in-place; false to create a _filtered.db copy
+check_in_place = true
+
+# Output: use versioned bundle by default so no need to specify out
+bundle_version = true       # 自动创建 outputs/vNNN 并生成两张图片
+
+# Rendering behavior
+roots_only = false          # 依赖图：包含边
+highlight_cycles = true     # 用红色高亮环路（如存在）
+no_layered = false          # 使用分层布局（先修在下、派生在上）
+max_depth = 6               # 限制深度（可按需调整）
+truncate_title = 28         # 节点标题截断长度
+no_unit_colors = false      # 按开课单位着色
+max_per_layer = 10           # 每层最多节点数（自动换行）
+
+# Clarity tweaks
+exclude_isolated = true     # 移除既无先修也无被依赖的孤立课程
+straight_edges = true       # 直线连边（减少弯曲重叠）

@@ -1,0 +1,29 @@
+## Visualize (Roots-Only Graph) Configuration / 仅无先修课程图 配置
+
+[common]
+out_dir = "outputs"
+verbose = true
+
+[visualize]
+# Data source
+db = "outputs/courses.db"
+
+# Optional: Allowed course list for this major
+allowed_courses_file = ""
+check_in_place = true
+
+# Output: roots-only graph only; still permit bundle to keep version parity
+bundle_version = true       # 自动生成下一个版本目录（同时也生成依赖图，保持一致性）
+
+# Rendering behavior
+roots_only = true           # 仅渲染无先修课程节点
+highlight_cycles = false    # 根节点视图不需要环路高亮
+no_layered = false          # 对根节点意义不大，但保持一致设置
+max_depth = 0               # 深度限制（对 roots-only 无影响，可设 0）
+truncate_title = 32         # 更长一点标题显示
+no_unit_colors = false      # 保留单位着色
+max_per_layer = 1          # 每行最多节点数（roots-only 使用水平分布）
+
+# Clarity tweaks
+exclude_isolated = false    # roots-only 视图不需要此选项
+straight_edges = false      # 没有边
