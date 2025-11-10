@@ -23,6 +23,162 @@ DEFAULT_CACHE_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "ca
 os.makedirs(DEFAULT_OUTPUT_DIR, exist_ok=True)
 
 
+def find_available_courses(db_path: str, completed_courses: list) -> dict:
+    """Find courses that can be taken based on completed courses.
+    
+    Args:
+        db_path: Path to SQLite database
+        completed_courses: List of completed course codes
+        
+    Returns:
+        Dictionary with:
+        - 'available': courses with all prerequisites met
+        - 'no_prereq': courses with no prerequisites (root courses)
+        - 'completed_children': direct children of completed courses
+    """
+    import sqlite3
+    
+    conn = sqlite3.connect(db_path)
+    cursor = conn.cursor()
+    
+    # Normalize completed courses to uppercase
+    completed = set(c.strip().upper() for c in completed_courses)
+    
+    # Get all courses
+    cursor.execute("SELECT course_code, course_title FROM courses")
+    all_courses = {row[0]: row[1] for row in cursor.fetchall()}
+    
+    # Get all prerequisite relationships
+    cursor.execute("SELECT course_code, prereq_code FROM prerequisites")
+    prereqs = {}
+    for course, prereq in cursor.fetchall():
+        if course not in prereqs:
+            prereqs[course] = []
+        prereqs[course].append(prereq)
+    
+    # Find root courses (no prerequisites)
+    no_prereq = []
+    for course in all_courses:
+        if course not in prereqs and course not in completed:
+            no_prereq.append((course, all_courses[course]))
+    
+    # Find available courses (all prerequisites met)
+    available = []
+    for course in all_courses:
+        if course in completed:
+            continue
+        if course in prereqs:
+            # Check if all prerequisites are in completed
+            if all(p in completed for p in prereqs[course]):
+                available.append((course, all_courses[course]))
+        else:
+            # No prerequisites, already in no_prereq
+            pass
+    
+    # Find children of completed courses (courses that have completed courses as prerequisites)
+    completed_children = []
+    for course in all_courses:
+        if course in completed:
+            continue
+        if course in prereqs:
+            # Check if any prerequisite is in completed (direct children)
+            if any(p in completed for p in prereqs[course]):
+                completed_children.append((course, all_courses[course], prereqs[course]))
+    
+    conn.close()
+    
+    return {
+        'available': sorted(available),
+        'no_prereq': sorted(no_prereq),
+        'completed_children': sorted(completed_children, key=lambda x: x[0])
+    }
+
+
+def interactive_course_query(db_path: str, verbose: bool = False):
+    """Interactive session for querying available courses based on completed courses."""
+    print("\n" + "=" * 70)
+    print("📚 交互式课程查询 / Interactive Course Query")
+    print("=" * 70)
+    print("\n提示：")
+    print("  • 你可以直接从 outputs 文件夹里查看课程树")
+    print("  • 也可以直接告诉我你已经学过哪些课程，我将帮你查找可选课程")
+    print("\nTips:")
+    print("  • You can view the course tree directly from the outputs folder")
+    print("  • Or tell me which courses you've completed, and I'll find available courses for you")
+    print("\n" + "-" * 70)
+    
+    while True:
+        print("\n请输入已完成的课程代码 (多个课程用空格或逗号分隔，输入 'q' 退出):")
+        print("Enter completed course codes (separate with spaces/commas, 'q' to quit):")
+        user_input = input("> ").strip()
+        
+        if not user_input or user_input.lower() == 'q':
+            print("\n感谢使用！Goodbye! 👋\n")
+            break
+        
+        # Parse input - support space or comma separation
+        completed = []
+        for item in user_input.replace(',', ' ').split():
+            if item.strip():
+                completed.append(item.strip())
+        
+        if not completed:
+            print("⚠️  未检测到有效的课程代码 / No valid course codes detected")
+            continue
+        
+        print(f"\n🔍 正在分析已完成课程: {', '.join(completed)}")
+        print(f"   Analyzing completed courses: {', '.join(completed)}\n")
+        
+        try:
+            results = find_available_courses(db_path, completed)
+            
+            # Display results
+            print("=" * 70)
+            
+            # 1. Available courses (all prerequisites met)
+            if results['available']:
+                print(f"\n✅ 可直接选修的课程 ({len(results['available'])} 门)")
+                print(f"   Available Courses (all prerequisites met):\n")
+                for code, title in results['available']:
+                    print(f"   • {code:12s} {title}")
+            else:
+                print("\n✅ 可直接选修的课程: 无")
+                print("   Available Courses: None")
+            
+            # 2. Courses that depend on completed courses (might have other prereqs)
+            if results['completed_children']:
+                print(f"\n📖 相关后续课程 ({len(results['completed_children'])} 门)")
+                print(f"   Related Follow-up Courses (may have other prerequisites):\n")
+                for code, title, prereqs in results['completed_children']:
+                    prereq_status = []
+                    for p in prereqs:
+                        if p.upper() in [c.upper() for c in completed]:
+                            prereq_status.append(f"✓{p}")
+                        else:
+                            prereq_status.append(f"✗{p}")
+                    prereq_str = ", ".join(prereq_status)
+                    print(f"   • {code:12s} {title}")
+                    print(f"     前置要求 / Prerequisites: {prereq_str}")
+            
+            # 3. Root courses (no prerequisites)
+            if results['no_prereq']:
+                print(f"\n🌱 无前置要求的课程 ({len(results['no_prereq'])} 门)")
+                print(f"   Root Courses (no prerequisites required):\n")
+                for code, title in results['no_prereq'][:10]:  # Limit to first 10
+                    print(f"   • {code:12s} {title}")
+                if len(results['no_prereq']) > 10:
+                    print(f"   ... 还有 {len(results['no_prereq']) - 10} 门课程")
+                    print(f"   ... and {len(results['no_prereq']) - 10} more courses")
+            
+            print("\n" + "=" * 70)
+            
+        except Exception as e:
+            print(f"\n❌ 查询出错 / Error occurred: {e}")
+            if verbose:
+                import traceback
+                traceback.print_exc()
+
+
 def cmd_scrape_major(args: argparse.Namespace) -> int:
     """CLI handler for scrape-major command."""
     # Read URLs from argument or file
@@ -217,6 +373,9 @@ def cmd_run_all(args: argparse.Namespace) -> int:
         print(f"  - Dependency graph: {dep_out}")
         print(f"  - Roots graph: {roots_out}")
         print(f"{'=' * 60}")
+    
+    # Start interactive course query session
+    interactive_course_query(db_path, verbose=args.verbose)
     
     return 0
 
