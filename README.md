@@ -79,6 +79,38 @@ deactivate
 
 **After completing the environment setup above, just 2 steps** to see the course dependency graph:
 
+### Pre-run Configuration: Set Your Major Course URL
+
+Before running, you need to configure your major course URL.
+
+**Step A: Find Your Major Course Page URL**
+
+1. Use Google to search: `cityu [your major name] curriculum`
+   - For example: `cityu creative media curriculum`
+2. Look for a website like this:
+   ![alt text](image.png)
+   ![alt text](image-1.png)
+   When you click in, it should look like this:
+   ![alt text](image-2.png)
+3. Copy the full URL from the browser address bar (example: `https://www.cityu.edu.hk/catalogue/ug/current/Major/BSC1_CM-1.htm`)
+   ![alt text](image-3.png)
+
+**Step B: Edit the Configuration File**
+
+1. Right-click `config/scraper.toml` → "Open with" → Notepad (or VS Code)
+2. Find these lines:
+
+   ```toml
+   urls = [
+       "https://www.cityu.edu.hk/catalogue/ug/current/Major/BSC1_DSC-1.htm",
+   ]
+   ```
+
+3. **Delete** the old URL inside quotes and paste your new URL
+4. Save the file (`Ctrl + S`)
+
+---
+
 ### Step 1: Run the Command in PowerShell
 
 ```powershell
@@ -93,33 +125,6 @@ Open the latest `outputs/vNNN/` directory (e.g., `v001/`), which contains:
 - `roots_vNNN.png` - Roots-only graph (courses with no prerequisites)
 
 The database file is located at `outputs/courses.db`.
-
----
-
-### If the Run Fails (404 or Network Error): Edit Config File
-
-The default URL may be outdated. Here's how to replace it:
-
-**Step A: Find a Valid Course Page URL**
-
-1. Open <https://www.cityu.edu.hk/catalogue/> in your browser
-2. Navigate to the major you're interested in (e.g., Computer Science)
-3. Copy the full URL from the browser address bar (example: `https://www.cityu.edu.hk/catalogue/ug/202425/Major/BSC1_CSC-1.htm`)
-
-**Step B: Edit the Configuration File**
-
-1. Right-click `config/scraper.toml` → "Open with" → Notepad (or VS Code)
-2. Find these lines:
-
-   ```toml
-   urls = [
-       "https://www.cityu.edu.hk/catalogue/ug/202425/Major/BSC1_CSC-1.htm",
-   ]
-   ```
-
-3. **Delete** the old URL inside quotes and paste your new URL
-4. Save the file (`Ctrl + S`)
-5. Re-run Step 1 command
 
 ---
 

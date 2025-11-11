@@ -77,6 +77,38 @@ deactivate
 
 **完成上面的环境配置后，只需 2 步**就能看到课程依赖图：
 
+### 运行前配置：设置你的专业课程 URL
+
+在运行之前，你需要配置你的专业课程 URL。
+
+**步骤 A：找到你的专业课程页面 URL**
+
+1. 打开浏览器用 Google 搜索：`cityu [你的专业名] curriculum`
+   - 例如：`cityu creative media curriculum`
+2. 找到像这样的网站
+   ![alt text](image.png)
+   ![alt text](image-1.png)
+   点进去是这样的
+   ![alt text](image-2.png)
+3. 复制浏览器地址栏的完整 URL（例如：`https://www.cityu.edu.hk/catalogue/ug/current/Major/BSC1_CM-1.htm`）
+   ![alt text](image-3.png)
+
+**步骤 B：编辑配置文件**
+
+1. 右键点击 `config/scraper.toml` → 选择"打开方式" → 记事本（或 VS Code）
+2. 找到这几行：
+
+   ```toml
+   urls = [
+       "https://www.cityu.edu.hk/catalogue/ug/current/Major/BSC1_DSC-1.htm",
+   ]
+   ```
+
+3. 把引号里的旧链接**整个删掉**，粘贴你刚才复制的新 URL
+4. 保存文件（`Ctrl + S`）
+
+---
+
 ### 第一步：在 PowerShell 运行命令
 
 ```powershell
@@ -94,34 +126,7 @@ py -3 orchestrator.py run-all --verbose
 
 ---
 
-### 如果运行失败（404 或网络错误）：修改配置文件
-
-默认 URL 可能已失效，需要手动替换：
-
-**步骤 A：找到有效的课程页面 URL**
-
-1. 打开浏览器访问 CityU 课程目录：<https://www.cityu.edu.hk/catalogue/>
-2. 找到你感兴趣的专业（如计算机科学 Computer Science）
-3. 复制浏览器地址栏的完整 URL（例如：`https://www.cityu.edu.hk/catalogue/ug/202425/Major/BSC1_CSC-1.htm`）
-
-**步骤 B：编辑配置文件**
-
-1. 右键点击 `config/scraper.toml` → 选择"打开方式" → 记事本（或 VS Code）
-2. 找到这几行：
-
-   ```toml
-   urls = [
-       "https://www.cityu.edu.hk/catalogue/ug/202425/Major/BSC1_CSC-1.htm",
-   ]
-   ```
-
-3. 把引号里的旧链接**整个删掉**，粘贴你刚才复制的新 URL
-4. 保存文件（`Ctrl + S`）
-5. 重新运行第一步的命令
-
----
-
-### 其他常见问题
+### 常见问题
 
 | 问题 | 快速解决 |
 |------|----------|
