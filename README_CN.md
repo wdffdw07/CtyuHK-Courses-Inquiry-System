@@ -132,6 +132,7 @@ uv run python orchestrator.py run-all --verbose
 | 问题 | 快速解决 |
 |------|----------|
 | "uv 不是内部或外部命令" | 先运行 `pip install uv`，然后重启 PowerShell |
+| "Invalid statement" TOML 错误 | 删除 `config/scraper.toml` 重新创建：从 README 复制模板，以 UTF-8 格式保存 |
 | 没生成图片 | 检查是否有网络；确认 `outputs/courses.db` 存在；重跑一次 |
 | 节点挤成一团 | 打开 `config/visualize_dependency.toml`，把 `max_per_layer` 改小（如改成 3） |
 | 前置课程显示不全 | 页面使用 "Precursors" 而非 "Prerequisites"，当前版本暂不支持 |
@@ -586,7 +587,27 @@ python orchestrator.py --config config/visualize_dependency.toml show-config
 
 ### 常见问题
 
-1. **URL 404 错误**
+1. **TOML 配置文件错误（"Invalid statement" 或 "TOMLDecodeError"）**
+   - 原因：配置文件编码问题或格式错误
+   - 解决：
+     1. 删除 `config/scraper.toml` 文件
+     2. 用 Notepad++ 或 VS Code 重新创建，从下面复制模板：
+     ```toml
+     [scraper]
+     urls = [
+         "https://www.cityu.edu.hk/catalogue/ug/current/Major/BSC1_DSC-1.htm",
+     ]
+     
+     [database]
+     reset = true
+     
+     [cache]
+     cache_dir = "cache"
+     use_cache = false
+     ```
+     3. 保存为 **UTF-8 编码**（不要用 UTF-8 with BOM）
+
+2. **URL 404 错误**
    - 检查 `config/scraper.toml` 中的 URL 是否正确
    - CityU 网站结构可能变化，需要更新 URL
 

@@ -134,6 +134,7 @@ The database file is located at `outputs/courses.db`.
 | Problem | Solution |
 |---------|----------|
 | "uv is not recognized" | Run `pip install uv` first, then restart PowerShell |
+| "Invalid statement" TOML error | Delete `config/scraper.toml` and re-create it: copy the template from README, save as UTF-8 |
 | No images generated | Check network connection; verify `outputs/courses.db` exists; re-run |
 | Nodes overlapping | Open `config/visualize_dependency.toml`, reduce `max_per_layer` (e.g., set to 3) |
 | Missing prerequisites | Some pages use "Precursors" instead of "Prerequisites" (not currently parsed) |
