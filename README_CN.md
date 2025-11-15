@@ -96,7 +96,9 @@ uv pip install -r requirements.txt
 
 **步骤 B：编辑配置文件**
 
-1. 右键点击 `config/scraper.toml` → 选择"打开方式" → 记事本（或 VS Code）
+1. 右键点击 `config/scraper.toml` → 选择"打开方式" → **VS Code**（推荐）或 Notepad++
+   - ⚠️ **不要用 Windows 记事本** - 它可能以错误的编码保存，导致错误！
+   - 下载 Notepad++：<https://notepad-plus-plus.org/downloads/>
 2. 找到这几行：
 
    ```toml
@@ -587,8 +589,8 @@ python orchestrator.py --config config/visualize_dependency.toml show-config
 
 ### 常见问题
 
-1. **TOML 配置文件错误（"Invalid statement" 或 "TOMLDecodeError"）**
-   - 原因：配置文件编码问题或格式错误
+1. **TOML 配置文件错误（"Invalid statement" 或 "UnicodeDecodeError"）**
+   - 原因：用 **Windows 记事本编辑后编码错误**（最常见！）
    - **快速验证**：在项目目录运行
      ```powershell
      python -c "import tomllib; f = open('config/scraper.toml', 'rb'); tomllib.load(f)"
@@ -597,7 +599,8 @@ python orchestrator.py --config config/visualize_dependency.toml show-config
    
    - **解决步骤**：
      1. 删除 `config/scraper.toml` 文件
-     2. 用 VS Code 或 Notepad++ 创建新文件，复制以下内容：
+     2. 用 **VS Code**（推荐）或 Notepad++ 创建新文件，**不要用 Windows 记事本**！
+     3. 复制以下内容：
      ```toml
      [scraper]
      urls = [

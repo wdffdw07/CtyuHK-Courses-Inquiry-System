@@ -98,7 +98,9 @@ Before running, you need to configure your major course URL.
 
 **Step B: Edit the Configuration File**
 
-1. Right-click `config/scraper.toml` → "Open with" → Notepad (or VS Code)
+1. Right-click `config/scraper.toml` → "Open with" → **VS Code** (recommended) or Notepad++
+   - ⚠️ **Do NOT use Windows Notepad** - it may save in wrong encoding and cause errors!
+   - Download Notepad++: <https://notepad-plus-plus.org/downloads/>
 2. Find these lines:
 
    ```toml

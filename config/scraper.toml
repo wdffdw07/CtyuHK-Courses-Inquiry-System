@@ -1,25 +1,25 @@
 # Scraper configuration
-# 配置要爬取的专业页面URL
+# Major curriculum URLs to scrape
 
 [scraper]
-# 主要爬取的URL列表
-# 可以添加多个URL，每个URL一行
+# List of URLs to scrape (one per line)
+# You can add more URLs, for example:
+# urls = [
+#     "https://www.cityu.edu.hk/catalogue/ug/current/Major/BSC1_DSC-1.htm",
+#     "https://www.cityu.edu.hk/catalogue/ug/current/major/bsc-ee.htm",
+# ]
 urls = [
     "https://www.cityu.edu.hk/catalogue/ug/current/Major/BSC1_DSC-1.htm",
-    # 可以添加更多URL，例如：
-    # "https://www.cityu.edu.hk/catalogue/ug/current/major/bsc-ee.htm",
-    # "https://www.cityu.edu.hk/catalogue/ug/current/major/bsc-se.htm",
 ]
 
-# 数据库设置
+# Database settings
 [database]
-# 是否在构建数据库前删除现有表（true=重新创建，false=保留现有数据）
+# Whether to drop existing tables before building (true=reset, false=keep existing data)
 reset = true
 
-# 缓存设置
+# Cache settings
 [cache]
-# 缓存目录
+# Cache directory
 cache_dir = "cache"
-
-# 是否使用缓存（设为false则每次都重新下载）
+# Whether to use cache (false=re-download every time)
 use_cache = false
