@@ -38,6 +38,12 @@ Verify installation:
 uv --version
 ```
 
+Create a virtual environment:
+
+```powershell
+uv venv
+```
+
 ### Step 1: Open Project Folder in PowerShell
 
 - Method A: In File Explorer, type `powershell` in the address bar and press Enter
@@ -49,9 +55,9 @@ Verify you're in the correct directory by checking for README.md:
 dir
 ```
 
-### Step 2: Install Dependencies (First Time Only)
+### Step 3: Install Dependencies (First Time Only)
 
-uv automatically creates and manages a virtual environment:
+Install all project dependencies (uv will use the virtual environment created in Step 1):
 
 ```powershell
 uv pip install -r requirements.txt
@@ -64,6 +70,7 @@ That's it! uv handles everything for you.
 - "python is not recognized" → Install Python first (see Step 0), make sure to check "Add to PATH"
 - "pip is not recognized" → Restart PowerShell after installing Python
 - "uv is not recognized as a command" → Run `pip install uv` first, or restart PowerShell
+- "No virtual environment found" → Run `uv venv` in the project directory first
 - "requirements.txt not found" → Run `dir` to confirm you're in the project root directory
 - Network/certificate errors → Try again later or switch networks; first-time downloads may be slow
 

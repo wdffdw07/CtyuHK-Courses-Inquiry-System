@@ -36,6 +36,12 @@ pip install uv
 uv --version
 ```
 
+创建虚拟环境：
+
+```powershell
+uv venv
+```
+
 ### 步骤 1：在 PowerShell 打开本项目文件夹
 
 - 方法 A：在资源管理器地址栏输入 powershell 回车
@@ -47,9 +53,9 @@ uv --version
 dir
 ```
 
-### 步骤 2：安装依赖（只需第一次）
+### 步骤 3：安装依赖（只需第一次）
 
-uv 会自动创建并管理虚拟环境：
+安装所有项目依赖（uv 会使用步骤 1 创建的虚拟环境）：
 
 ```powershell
 uv pip install -r requirements.txt
@@ -62,6 +68,7 @@ uv pip install -r requirements.txt
 - "python 不是内部或外部命令" → 先安装 Python（见步骤 0），安装时务必勾选 "Add to PATH"
 - "pip 不是内部或外部命令" → 安装 Python 后重启 PowerShell
 - "uv 不是内部或外部命令" → 先运行 `pip install uv`，或重启 PowerShell 再试
+- "No virtual environment found" → 先在项目目录运行 `uv venv`
 - "找不到 requirements.txt" → 先执行 `dir`，确认你在项目根目录
 - 网络/证书报错 → 稍后再试或换网络，首次下载页面可能慢一点
 
