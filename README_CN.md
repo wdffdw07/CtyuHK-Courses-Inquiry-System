@@ -589,9 +589,15 @@ python orchestrator.py --config config/visualize_dependency.toml show-config
 
 1. **TOML 配置文件错误（"Invalid statement" 或 "TOMLDecodeError"）**
    - 原因：配置文件编码问题或格式错误
-   - 解决：
+   - **快速验证**：在项目目录运行
+     ```powershell
+     python -c "import tomllib; f = open('config/scraper.toml', 'rb'); tomllib.load(f)"
+     ```
+     如果报错，说明文件有问题。
+   
+   - **解决步骤**：
      1. 删除 `config/scraper.toml` 文件
-     2. 用 Notepad++ 或 VS Code 重新创建，从下面复制模板：
+     2. 用 VS Code 或 Notepad++ 创建新文件，复制以下内容：
      ```toml
      [scraper]
      urls = [
@@ -605,7 +611,9 @@ python orchestrator.py --config config/visualize_dependency.toml show-config
      cache_dir = "cache"
      use_cache = false
      ```
-     3. 保存为 **UTF-8 编码**（不要用 UTF-8 with BOM）
+     3. **重要**：保存时选择 **UTF-8 编码**（VS Code 右下角可以看到/更改编码）
+     4. 确保文件保存在 `config/scraper.toml`（注意路径）
+     5. 再次运行验证命令确认没问题
 
 2. **URL 404 错误**
    - 检查 `config/scraper.toml` 中的 URL 是否正确
